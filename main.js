@@ -1,10 +1,9 @@
-const {app, BrowserWindow, session} = require('electron')
+const {app, BrowserWindow, dialog} = require('electron')
+
 let mainWindow
 
 // Creating a new BrowserWindow when 'app' is ready
 function createWindow() { // Renderer of Chromium window
-
-  const ses = session.defaultSession
 
   mainWindow = new BrowserWindow({
     width: 1000, height: 800,
@@ -13,28 +12,26 @@ function createWindow() { // Renderer of Chromium window
 
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile('index.html')
-  // mainWindow.loadURL('https://github.com')
 
   // Open DevTools - Remove for PRODUCTION!
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools()
 
-  ses.on('will-download', (e, downloadItem, webContents) => {
+  mainWindow.webContents.on('did-finish-load', async () => {
 
-    let fileName = downloadItem.getFilename()
-    let fileSize = downloadItem.getTotalBytes()
+    // await dialog.showOpenDialog({
+    //   buttonLabel: 'Select a photo',
+    //   defaultPath: app.getPath('desktop'),
+    //   properties: ['multiSelections', 'createDirectory', 'openFile', 'openDirectory']
+    // }).then(filepaths => console.log(filepaths))
+    // await dialog.showSaveDialog({}).then(__filename => console.log(__filename))
 
-    // save to desktop
-    downloadItem.setSavePath(app.getPath('desktop') + `/${fileName}`)
-
-    downloadItem.on('updated', (e, state) => {
-
-      let received = downloadItem.getReceivedBytes()
-
-      if (state === 'progressing' && received) {
-        let progress = Math.round((received / fileSize) * 100)
-        webContents.executeJavaScript(`window.progress.value = ${progress}`)
-      }
-    })
+    const answers = ['Yes', 'No', 'Maybe']
+    await dialog.showMessageBox({
+      title: 'Message Box',
+      message: 'Please select an option',
+      detail: 'Message details.',
+      buttons: answers
+    }).then(response => console.log(answers[response.response]))
   })
 
   // Listen for window being closed
