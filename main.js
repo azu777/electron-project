@@ -1,4 +1,4 @@
-const {app, BrowserWindow, dialog} = require('electron')
+const {app, BrowserWindow, globalShortcut} = require('electron')
 
 let mainWindow
 
@@ -16,22 +16,9 @@ function createWindow() { // Renderer of Chromium window
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools()
 
-  mainWindow.webContents.on('did-finish-load', async () => {
-
-    // await dialog.showOpenDialog({
-    //   buttonLabel: 'Select a photo',
-    //   defaultPath: app.getPath('desktop'),
-    //   properties: ['multiSelections', 'createDirectory', 'openFile', 'openDirectory']
-    // }).then(filepaths => console.log(filepaths))
-    // await dialog.showSaveDialog({}).then(__filename => console.log(__filename))
-
-    const answers = ['Yes', 'No', 'Maybe']
-    await dialog.showMessageBox({
-      title: 'Message Box',
-      message: 'Please select an option',
-      detail: 'Message details.',
-      buttons: answers
-    }).then(response => console.log(answers[response.response]))
+  globalShortcut.register('Alt+G', () => {
+    console.log('User pressed G with a combination key')
+    globalShortcut.unregister('Alt+G')
   })
 
   // Listen for window being closed
