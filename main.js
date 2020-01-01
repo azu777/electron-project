@@ -1,17 +1,10 @@
-const {app, BrowserWindow, session, webContents} = require('electron')
+const {app, BrowserWindow, session} = require('electron')
 let mainWindow
 
 // Creating a new BrowserWindow when 'app' is ready
 function createWindow() { // Renderer of Chromium window
 
   const ses = session.defaultSession
-  console.log(ses)
-
-  const getCookies = async () => {
-    const cookies = await ses.cookies.get({name: 'cookie1'})
-    console.log(cookies)
-    return cookies
-  }
 
   mainWindow = new BrowserWindow({
     width: 1000, height: 800,
@@ -22,28 +15,27 @@ function createWindow() { // Renderer of Chromium window
   mainWindow.loadFile('index.html')
   // mainWindow.loadURL('https://github.com')
 
-  async function removeCookies() {
-    await ses.cookies.remove('https://myappdomain.com', 'cookie1')
-    await getCookies()
-  }
-  removeCookies()
-
-  // const cookie = {url: 'https://myappdomain.com', name: 'cookie1', value: 'electron', expirationDate: 2408847516}
-
-  // const setCookie = async () => {
-  //   await ses.cookies.set(cookie)
-  //   console.log('cookie1 set')
-  //   await getCookies()
-  // }
-  // setCookie()
-
-  // mainWindow.webContents.on('did-finish-load', async e => {
-  //   console.log('LOADED')
-  //   await getCookies()
-  // })
-
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
+
+  ses.on('will-download', (e, downloadItem, webContents) => {
+
+    let fileName = downloadItem.getFilename()
+    let fileSize = downloadItem.getTotalBytes()
+
+    // save to desktop
+    downloadItem.setSavePath(app.getPath('desktop') + `/${fileName}`)
+
+    downloadItem.on('updated', (e, state) => {
+
+      let received = downloadItem.getReceivedBytes()
+
+      if (state === 'progressing' && received) {
+        let progress = Math.round((received / fileSize) * 100)
+        webContents.executeJavaScript(`window.progress.value = ${progress}`)
+      }
+    })
+  })
 
   // Listen for window being closed
   mainWindow.on('closed', () => mainWindow = null)
