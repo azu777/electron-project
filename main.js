@@ -1,6 +1,8 @@
-const {app, BrowserWindow, globalShortcut} = require('electron')
+const {app, BrowserWindow, Menu, MenuItem} = require('electron')
 
 let mainWindow
+
+let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
 
 // Creating a new BrowserWindow when 'app' is ready
 function createWindow() { // Renderer of Chromium window
@@ -16,10 +18,7 @@ function createWindow() { // Renderer of Chromium window
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools()
 
-  globalShortcut.register('Alt+G', () => {
-    console.log('User pressed G with a combination key')
-    globalShortcut.unregister('Alt+G')
-  })
+  Menu.setApplicationMenu(mainMenu)
 
   // Listen for window being closed
   mainWindow.on('closed', () => mainWindow = null)
