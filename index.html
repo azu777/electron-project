@@ -12,8 +12,26 @@
 
   <h1>Hello World!</h1>
 
-  <textarea name="name" id="t1" cols="30" rows="10"></textarea>
+  <h3><a href="#" onclick="newWin()">New Window</a></h3>
+  <h3><a href="#" onclick="closeWin()">Close Window</a></h3>
+  <h3><a href="#" onclick="styleWin()">Bad Fonts</a></h3>
 
+  <script>
+
+    let win
+
+    const newWin = () => {
+      win = window.open('https://electronjs.org', '_blank', 'width=500, height=450, alwaysOnTop=1')
+    }
+
+    const closeWin = () => {
+      win.close()
+    }
+
+    const styleWin = () => {
+      win.eval("document.getElementsByTagName('body')[0].style.fontFamily = 'Comic Sans MS'")
+    }
+  </script>
 </body>
 
 </html>

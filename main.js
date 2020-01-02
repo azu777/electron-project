@@ -1,8 +1,8 @@
-const {app, BrowserWindow, Menu, MenuItem} = require('electron')
+const {app, BrowserWindow} = require('electron')
+
+global['myGlobe'] = 'A var set in main.js'
 
 let mainWindow
-
-let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
 
 // Creating a new BrowserWindow when 'app' is ready
 function createWindow() { // Renderer of Chromium window
@@ -17,8 +17,6 @@ function createWindow() { // Renderer of Chromium window
 
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools()
-
-  Menu.setApplicationMenu(mainMenu)
 
   // Listen for window being closed
   mainWindow.on('closed', () => mainWindow = null)
