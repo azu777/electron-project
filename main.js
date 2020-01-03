@@ -1,15 +1,18 @@
-const {app, BrowserWindow} = require('electron')
-
-global['myGlobe'] = 'A var set in main.js'
+const electron = require('electron')
+const {app, BrowserWindow} = electron
 
 let mainWindow
+
 
 // Creating a new BrowserWindow when 'app' is ready
 function createWindow() { // Renderer of Chromium window
 
   mainWindow = new BrowserWindow({
     width: 1000, height: 800,
-    webPreferences: {nodeIntegration: true}
+    webPreferences: {
+      nodeIntegration: false,
+      preload: __dirname + '/preload.js'
+    }
   })
 
   // Load index.html into the new BrowserWindow

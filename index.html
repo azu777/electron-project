@@ -10,28 +10,27 @@
 
 <body>
 
-  <h1>Hello World!</h1>
+  <h1>Electron API</h1>
 
-  <h3><a href="#" onclick="newWin()">New Window</a></h3>
-  <h3><a href="#" onclick="closeWin()">Close Window</a></h3>
-  <h3><a href="#" onclick="styleWin()">Bad Fonts</a></h3>
+  We are using Node.js <strong>
+    <script>document.write(versions.node)</script></strong>
+  and Electron <strong>
+    <script>document.write(versions.electron)</script></strong>
+
+  <br><textarea id="content" cols="30" rows="10"></textarea>
+  <br><button id="save" onclick="saveText()">Save Content</button>
 
   <script>
 
-    let win
+    const saveText = e => {
 
-    const newWin = () => {
-      win = window.open('https://electronjs.org', '_blank', 'width=500, height=450, alwaysOnTop=1')
+      const text = document.getElementById('content').value
+
+      writeToFile(text)
     }
 
-    const closeWin = () => {
-      win.close()
-    }
-
-    const styleWin = () => {
-      win.eval("document.getElementsByTagName('body')[0].style.fontFamily = 'Comic Sans MS'")
-    }
   </script>
+
 </body>
 
 </html>
