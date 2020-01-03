@@ -2,11 +2,6 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-// const electron = require('electron');
-
-// electron.screen.on('display-metrics-changed', (e, display, metricsChanged) => {
-//   console.log(metricsChanged)
-// })
 
 
 

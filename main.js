@@ -1,22 +1,25 @@
-const electron = require('electron')
-const {app, BrowserWindow} = electron
+const {app, BrowserWindow} = require('electron')
+const windowStateKeeper = require('electron-window-state')
 
 let mainWindow
-
 
 // Creating a new BrowserWindow when 'app' is ready
 function createWindow() { // Renderer of Chromium window
 
+  // Win state keeper
+  let state = windowStateKeeper({
+    defaultWidth: 500, defaultHeight: 650
+  })
+
   mainWindow = new BrowserWindow({
-    width: 1000, height: 800,
-    webPreferences: {
-      nodeIntegration: false,
-      preload: __dirname + '/preload.js'
-    }
+    x: state.x, y: state.y,
+    width: state.width, height: state.height,
+    minWidth: 350, maxWidth: 650, minHeight: 300,
+    webPreferences: {nodeIntegration: true}
   })
 
   // Load index.html into the new BrowserWindow
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('./renderer/main.html')
 
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools()
@@ -27,8 +30,6 @@ function createWindow() { // Renderer of Chromium window
 
 // Electron 'app' is ready
 app.on('ready', () => createWindow())
-
-// app.on('browser-window-focus', () => console.log('App focused'))
 
 // Quit when all windows are closed - (Not macOS - Darwin)
 app.on('window-all-closed', () => {
