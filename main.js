@@ -1,7 +1,17 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const windowStateKeeper = require('electron-window-state')
+const readItem = require('./readItem.js')
 
 let mainWindow
+
+// Listen for new item request
+ipcMain.on('new-item', (e, itemUrl) => {
+
+  // Get new item and send to renderer
+  readItem(itemUrl, item => {
+    e.sender.send('new-item-success', item)
+  })
+})
 
 // Creating a new BrowserWindow when 'app' is ready
 function createWindow() { // Renderer of Chromium window
@@ -20,6 +30,9 @@ function createWindow() { // Renderer of Chromium window
 
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile('./renderer/main.html')
+
+  // Manage new window state
+  state.manage(mainWindow)
 
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools()
